@@ -623,6 +623,9 @@ body.on-s1 .logo-tr { opacity: 0; }
   /* Reduce padding throughout */
   :root { --pad: 1.4rem; }
 
+  /* ── S02 — keep the 2×2 pillar grid on mobile (same as before, untouched) ── */
+  #s2 .pillars { grid-template-columns: repeat(2, 1fr); }
+
   /* ── S01 — Cover: stack logo above content ── */
   #s1 {
     /* Switch from side-by-side grid to top/bottom flex */
@@ -659,38 +662,60 @@ body.on-s1 .logo-tr { opacity: 0; }
   #s1 .tagline { margin-bottom: 1.2rem; font-size: .88rem; }
   #s1 .meta { gap: 1.2rem; flex-wrap: wrap; padding-top: .9rem; }
 
-  /* ── S03 — Our Team: single column grid, no photo panel ── */
+  /* ── S03 — Our Team: full-width, bg image behind content ── */
   #s3 {
     display: flex;
     flex-direction: column;
+    position: relative;   /* needed so absolute bg sits inside slide */
   }
-  #s3 .right { display: none; }  /* hide photo on mobile, content needs the space */
+  /* Show the photo as a full-bleed background layer */
+  #s3 .right {
+    display: block;
+    position: absolute;
+    inset: 0;
+    z-index: 0;
+  }
+  #s3 .right img {
+    position: absolute; inset: 0; width: 100%; height: 100%;
+    object-fit: cover; object-position: center;
+    filter: brightness(.38) saturate(.55);
+  }
+  #s3 .right::after {
+    content: ''; position: absolute; inset: 0;
+    background: linear-gradient(135deg,
+      rgba(8,8,8,.97) 0%,
+      rgba(8,8,8,.82) 60%,
+      rgba(8,8,8,.88) 100%);
+  }
+  /* Content sits above the bg */
   #s3 .left {
+    position: relative; z-index: 1;
     flex: 1;
-    overflow-y: auto;           /* allow internal scroll if content is tall */
+    overflow-y: auto;
     -webkit-overflow-scrolling: touch;
   }
-  #s3 h2 { font-size: clamp(1.6rem, 7vw, 2.4rem); margin-bottom: 1rem; }
-  /* 6 cells → 2 columns × 3 rows, compact padding */
+  #s3 h2 { font-size: clamp(1.5rem, 6.5vw, 2.2rem); margin-bottom: .8rem; }
+  /* 2 columns × 3 rows — tighter to fit all 6 on screen */
   #s3 .team-grid {
     grid-template-columns: repeat(2, 1fr);
     gap: 1px;
     max-width: 100%;
   }
   #s3 .tc {
-    padding: .75rem .7rem;
-    gap: 8px;
-    /* prevent the lift hover from causing layout issues on touch */
+    padding: .6rem .55rem;
+    gap: 7px;
     transition: background .3s;
+    overflow: hidden;       /* prevent any cell from exceeding column width */
   }
   #s3 .tc:hover { transform: none; box-shadow: none; }
   #s3 .tc-icon {
-    width: 26px; height: 26px;
-    font-size: 11px; flex-shrink: 0;
+    width: 22px; height: 22px;
+    font-size: 10px; flex-shrink: 0;
   }
-  #s3 .tc-en  { font-size: .6rem; }
-  #s3 .tc-zh  { font-size: .58rem; }
-  #s3 .tc-org { font-size: .55rem; }
+  /* Remove nowrap so text wraps within the column width */
+  #s3 .tc-en  { font-size: .58rem; white-space: normal; }
+  #s3 .tc-zh  { font-size: .56rem; white-space: normal; }
+  #s3 .tc-org { font-size: .52rem; white-space: normal; }
 
   /* ── S04 — Athletes: show background image on mobile ── */
   #s4 {
